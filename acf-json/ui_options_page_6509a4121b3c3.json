@@ -1,0 +1,26 @@
+{
+    "key": "ui_options_page_6509a4121b3c3",
+    "title": "ตั้งค่าระบบจอง",
+    "active": true,
+    "menu_order": 0,
+    "page_title": "ตั้งค่าระบบจอง",
+    "menu_slug": "theme-setting",
+    "parent_slug": "none",
+    "advanced_configuration": 0,
+    "icon_url": "",
+    "menu_title": "",
+    "position": "",
+    "redirect": 0,
+    "description": "",
+    "menu_icon": {
+        "type": "dashicons",
+        "value": "dashicons-admin-generic"
+    },
+    "update_button": "Update",
+    "updated_message": "Options Updated",
+    "capability": "edit_posts",
+    "data_storage": "options",
+    "post_id": "",
+    "autoload": 0,
+    "modified": 1719651002
+}

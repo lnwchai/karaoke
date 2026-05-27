@@ -1,0 +1,1576 @@
+{
+    "key": "group_6048900d92a2a",
+    "title": "Sales Page",
+    "fields": [
+        {
+            "key": "field_6049ba5a2b14a",
+            "label": "Products",
+            "name": "",
+            "type": "tab",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "placement": "top",
+            "endpoint": 0
+        },
+        {
+            "key": "field_610cf0cf1aaed",
+            "label": "Title Text",
+            "name": "title_text",
+            "type": "text",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "placeholder": "",
+            "prepend": "",
+            "append": "",
+            "maxlength": ""
+        },
+        {
+            "key": "field_6049bc089e221",
+            "label": "Mobile Layout",
+            "name": "layout_m",
+            "type": "button_group",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "25",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "list": "List",
+                "card": "Card"
+            },
+            "allow_null": 0,
+            "default_value": "list",
+            "layout": "horizontal",
+            "return_format": "value"
+        },
+        {
+            "key": "field_6049bc8213071",
+            "label": "Mobile Columns",
+            "name": "columns_m",
+            "type": "number",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_6049bc089e221",
+                        "operator": "==",
+                        "value": "card"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "25",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 1,
+            "placeholder": "",
+            "prepend": "",
+            "append": "",
+            "min": 1,
+            "max": 3,
+            "step": 1
+        },
+        {
+            "key": "field_607696cdcef38",
+            "label": "Mobile Image Width",
+            "name": "img_width_m",
+            "type": "number",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_6049bc089e221",
+                        "operator": "==",
+                        "value": "list"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "25",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 40,
+            "placeholder": "",
+            "prepend": "",
+            "append": "%",
+            "min": 10,
+            "max": 90,
+            "step": 1
+        },
+        {
+            "key": "field_607beb4a0c27b",
+            "label": "Desktop Layout",
+            "name": "layout_d",
+            "type": "button_group",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "25",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "list": "List",
+                "card": "Card"
+            },
+            "allow_null": 0,
+            "default_value": "card",
+            "layout": "horizontal",
+            "return_format": "value"
+        },
+        {
+            "key": "field_6049e6d92e64c",
+            "label": "Desktop Columns",
+            "name": "columns_d",
+            "type": "number",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_607beb4a0c27b",
+                        "operator": "==",
+                        "value": "card"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "25",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 3,
+            "placeholder": "",
+            "prepend": "",
+            "append": "",
+            "min": 1,
+            "max": 6,
+            "step": 1
+        },
+        {
+            "key": "field_60769703cef39",
+            "label": "Desktop Image Width",
+            "name": "img_width_d",
+            "type": "number",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_607beb4a0c27b",
+                        "operator": "==",
+                        "value": "list"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "25",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 40,
+            "placeholder": "",
+            "prepend": "",
+            "append": "%",
+            "min": 10,
+            "max": 90,
+            "step": 1
+        },
+        {
+            "key": "field_604890153b2ab",
+            "label": "Products",
+            "name": "products",
+            "type": "repeater",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "-border",
+                "id": ""
+            },
+            "collapsed": "field_6048905e3b2ad",
+            "min": 0,
+            "max": 0,
+            "layout": "table",
+            "button_label": "Add Product",
+            "sub_fields": [
+                {
+                    "key": "field_6048905e3b2ad",
+                    "label": "Image",
+                    "name": "image",
+                    "type": "image",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "return_format": "id",
+                    "preview_size": "thumbnail",
+                    "library": "all",
+                    "min_width": "",
+                    "min_height": "",
+                    "min_size": "",
+                    "max_width": "",
+                    "max_height": "",
+                    "max_size": "",
+                    "mime_types": ""
+                },
+                {
+                    "key": "field_604890383b2ac",
+                    "label": "Name",
+                    "name": "name",
+                    "type": "text",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "placeholder": "",
+                    "prepend": "",
+                    "append": "",
+                    "maxlength": ""
+                },
+                {
+                    "key": "field_604891473b2af",
+                    "label": "Description",
+                    "name": "description",
+                    "type": "text",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "placeholder": "",
+                    "prepend": "",
+                    "append": "",
+                    "maxlength": ""
+                },
+                {
+                    "key": "field_60765f868176a",
+                    "label": "Full Price",
+                    "name": "full_price",
+                    "type": "number",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "placeholder": "",
+                    "prepend": "",
+                    "append": "",
+                    "min": "",
+                    "max": "",
+                    "step": ""
+                },
+                {
+                    "key": "field_6048906f3b2ae",
+                    "label": "Sale Price",
+                    "name": "sale_price",
+                    "type": "number",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "placeholder": "",
+                    "prepend": "",
+                    "append": "",
+                    "min": "",
+                    "max": "",
+                    "step": ""
+                },
+                {
+                    "key": "field_604892743b2b0",
+                    "label": "Shipping",
+                    "name": "shipping",
+                    "type": "number",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": 0,
+                    "placeholder": "",
+                    "prepend": "",
+                    "append": "",
+                    "min": 0,
+                    "max": "",
+                    "step": ""
+                },
+                {
+                    "key": "field_6108cf3613c0b",
+                    "label": "In Stock",
+                    "name": "stock",
+                    "type": "number",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": [
+                        [
+                            {
+                                "field": "field_610a3f4a07c03",
+                                "operator": "==",
+                                "value": "1"
+                            }
+                        ]
+                    ],
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "placeholder": "",
+                    "prepend": "",
+                    "append": "",
+                    "min": 0,
+                    "max": "",
+                    "step": 1
+                },
+                {
+                    "key": "field_607bc6c478152",
+                    "label": "Selected?",
+                    "name": "selected",
+                    "type": "true_false",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "message": "Auto Selected",
+                    "default_value": 0,
+                    "ui": 0,
+                    "ui_on_text": "",
+                    "ui_off_text": ""
+                }
+            ]
+        },
+        {
+            "key": "field_610bbf50dd23d",
+            "label": "Select One Product",
+            "name": "select_one",
+            "type": "true_false",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "25",
+                "class": "-border",
+                "id": ""
+            },
+            "message": "",
+            "default_value": 0,
+            "ui": 1,
+            "ui_on_text": "Yes",
+            "ui_off_text": "No"
+        },
+        {
+            "key": "field_610bbf0cdd23c",
+            "label": "Hide Product Amount",
+            "name": "hide_amount",
+            "type": "true_false",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "25",
+                "class": "-border",
+                "id": ""
+            },
+            "message": "",
+            "default_value": 0,
+            "ui": 1,
+            "ui_on_text": "Hide",
+            "ui_off_text": "Show"
+        },
+        {
+            "key": "field_6072f38cda5a4",
+            "label": "Currency",
+            "name": "currency",
+            "type": "text",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "16.6666",
+                "class": "-border",
+                "id": ""
+            },
+            "default_value": " Baht",
+            "placeholder": "",
+            "prepend": "",
+            "append": "",
+            "maxlength": ""
+        },
+        {
+            "key": "field_613765f1db6f7",
+            "label": "Number of decimals",
+            "name": "decimals",
+            "type": "button_group",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "16.6666",
+                "class": "-border",
+                "id": ""
+            },
+            "choices": {
+                "0": "0",
+                "2": "0.00"
+            },
+            "allow_null": 0,
+            "default_value": 0,
+            "layout": "horizontal",
+            "return_format": "value"
+        },
+        {
+            "key": "field_6072f66696a44",
+            "label": "Currency Position",
+            "name": "currency_position",
+            "type": "button_group",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "16.6666",
+                "class": "-border",
+                "id": ""
+            },
+            "choices": {
+                "left": "Left",
+                "right": "Right"
+            },
+            "allow_null": 0,
+            "default_value": "right",
+            "layout": "horizontal",
+            "return_format": "value"
+        },
+        {
+            "key": "field_610a3f4a07c03",
+            "label": "Limit Purchase",
+            "name": "limit_purchase",
+            "type": "true_false",
+            "instructions": "Set limit items from In Stock.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "25",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "default_value": 0,
+            "ui": 1,
+            "ui_on_text": "Limit",
+            "ui_off_text": "No"
+        },
+        {
+            "key": "field_610a417bea0e7",
+            "label": "Sold Out Text",
+            "name": "sold_out_text",
+            "type": "text",
+            "instructions": "Display if In Stock is 0.",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_610a3f4a07c03",
+                        "operator": "==",
+                        "value": "1"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "25",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "ขายหมดแล้ว!",
+            "placeholder": "",
+            "prepend": "",
+            "append": "",
+            "maxlength": ""
+        },
+        {
+            "key": "field_610a42651695e",
+            "label": "Show Stock?",
+            "name": "show_stock",
+            "type": "true_false",
+            "instructions": "Show under product description",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_610a3f4a07c03",
+                        "operator": "==",
+                        "value": "1"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "25",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "default_value": 0,
+            "ui": 1,
+            "ui_on_text": "Show",
+            "ui_off_text": "Hide"
+        },
+        {
+            "key": "field_610a42241695d",
+            "label": "In Stock Text",
+            "name": "instock_text",
+            "type": "text",
+            "instructions": "Use [instock] for stock amount.",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_610a42651695e",
+                        "operator": "==",
+                        "value": "1"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "25",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "มีสินค้า [instock] ชิ้น",
+            "placeholder": "",
+            "prepend": "",
+            "append": "",
+            "maxlength": ""
+        },
+        {
+            "key": "field_6049e353d0e1e",
+            "label": "Shipping",
+            "name": "",
+            "type": "tab",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "placement": "top",
+            "endpoint": 0
+        },
+        {
+            "key": "field_6049e502c44a4",
+            "label": "Options",
+            "name": "shipping_options",
+            "type": "button_group",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "none": "None",
+                "free": "Free",
+                "flat": "Flat Rate",
+                "flat_free": "Flat + Free Shipping",
+                "cal": "Calculation"
+            },
+            "allow_null": 0,
+            "default_value": "free",
+            "layout": "horizontal",
+            "return_format": "value"
+        },
+        {
+            "key": "field_6049e752d0d6c",
+            "label": "Flat Cost",
+            "name": "flat_cost",
+            "type": "number",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_6049e502c44a4",
+                        "operator": "==",
+                        "value": "flat"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 40,
+            "placeholder": "",
+            "prepend": "",
+            "append": "",
+            "min": "",
+            "max": "",
+            "step": ""
+        },
+        {
+            "key": "field_6049e83bcc703",
+            "label": "Flat Cost",
+            "name": "flat_free_cost",
+            "type": "number",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_6049e502c44a4",
+                        "operator": "==",
+                        "value": "flat_free"
+                    }
+                ],
+                [
+                    {
+                        "field": "field_6049eb0dd11cf",
+                        "operator": "==",
+                        "value": "start"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "25",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 40,
+            "placeholder": "",
+            "prepend": "",
+            "append": "",
+            "min": "",
+            "max": "",
+            "step": ""
+        },
+        {
+            "key": "field_6049e858cc704",
+            "label": "Minimum for Free Shipping",
+            "name": "flat_free_min",
+            "type": "number",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_6049e502c44a4",
+                        "operator": "==",
+                        "value": "flat_free"
+                    }
+                ],
+                [
+                    {
+                        "field": "field_6049eb0dd11cf",
+                        "operator": "==",
+                        "value": "free"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "25",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 400,
+            "placeholder": "",
+            "prepend": "",
+            "append": "",
+            "min": "",
+            "max": "",
+            "step": ""
+        },
+        {
+            "key": "field_610a56a89cb53",
+            "label": "COD Cost",
+            "name": "cod_cost",
+            "type": "number",
+            "instructions": "Cash on Delivery Cost (คิดเพิ่มหากเลือกเก็บเงินปลายทาง)",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_6049eb0dd11cf",
+                        "operator": "==",
+                        "value": "cod"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "placeholder": "",
+            "prepend": "",
+            "append": "",
+            "min": "",
+            "max": "",
+            "step": ""
+        },
+        {
+            "key": "field_6049eb0dd11cf",
+            "label": "Calculation Steps",
+            "name": "steps",
+            "type": "checkbox",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_6049e502c44a4",
+                        "operator": "==",
+                        "value": "cal"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "start": "Starting Flat Cost",
+                "products": "Add Products Shipping Cost",
+                "cod": "Add Cash on Delivery (COD) Cost",
+                "free": "Free Shipping if Buy More"
+            },
+            "allow_custom": 0,
+            "default_value": [],
+            "layout": "vertical",
+            "toggle": 0,
+            "return_format": "value",
+            "save_custom": 0
+        },
+        {
+            "key": "field_6049e04f0c4d8",
+            "label": "Payment Form",
+            "name": "",
+            "type": "tab",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "placement": "top",
+            "endpoint": 0
+        },
+        {
+            "key": "field_607530bea0aa9",
+            "label": "Use Forminator?",
+            "name": "use_forminator",
+            "type": "true_false",
+            "instructions": "If yes, please install <a href=\"https:\/\/wordpress.org\/plugins\/forminator\/\" target=\"_blank\"><b>Forminator<\/b><\/a> plugin.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "25",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "default_value": 1,
+            "ui": 1,
+            "ui_on_text": "Forminator",
+            "ui_off_text": "Other Plugin"
+        },
+        {
+            "key": "field_6049e05e0c4d9",
+            "label": "Forminator",
+            "name": "form",
+            "type": "post_object",
+            "instructions": "Please read <a href=\"https:\/\/docs.seedwebs.com\/article\/64-sale-page-payment-form\" target=\"_blank\"><b>Sale Page Payment Form<\/b><\/a>.",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_607530bea0aa9",
+                        "operator": "==",
+                        "value": "1"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "25",
+                "class": "",
+                "id": ""
+            },
+            "post_type": [
+                "forminator_forms"
+            ],
+            "taxonomy": "",
+            "allow_null": 0,
+            "multiple": 0,
+            "return_format": "id",
+            "ui": 1
+        },
+        {
+            "key": "field_607533db1ca41",
+            "label": "Other Plugin Shortcode",
+            "name": "other_plugin_shortcode",
+            "type": "text",
+            "instructions": "Please read <a href=\"https:\/\/docs.seedwebs.com\/article\/64-sale-page-payment-form\" target=\"_blank\"><b>Sale Page Payment Form<\/b><\/a>.",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_607530bea0aa9",
+                        "operator": "!=",
+                        "value": "1"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "25",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "placeholder": "",
+            "prepend": "",
+            "append": "",
+            "maxlength": ""
+        },
+        {
+            "key": "field_6072aab8c7758",
+            "label": "Show Summary?",
+            "name": "show_summary",
+            "type": "true_false",
+            "instructions": "Order Summary Table.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "25",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "default_value": 1,
+            "ui": 1,
+            "ui_on_text": "Show",
+            "ui_off_text": "Hide"
+        },
+        {
+            "key": "field_607531c5e10b1",
+            "label": "Show Bank?",
+            "name": "show_bank",
+            "type": "true_false",
+            "instructions": "Bank Account for Wire Transfer",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "25",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "default_value": 1,
+            "ui": 1,
+            "ui_on_text": "Show",
+            "ui_off_text": "Hide"
+        },
+        {
+            "key": "field_6072a9e25cb19",
+            "label": "Summary Table Text",
+            "name": "table",
+            "type": "group",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_6072aab8c7758",
+                        "operator": "==",
+                        "value": "1"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "layout": "block",
+            "sub_fields": [
+                {
+                    "key": "field_6072a9ef5cb1a",
+                    "label": "Product",
+                    "name": "product",
+                    "type": "text",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "16.666",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "สินค้า",
+                    "placeholder": "",
+                    "prepend": "",
+                    "append": "",
+                    "maxlength": ""
+                },
+                {
+                    "key": "field_6072a9f95cb1b",
+                    "label": "Amount",
+                    "name": "amount",
+                    "type": "text",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "16.666",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "จำนวน",
+                    "placeholder": "",
+                    "prepend": "",
+                    "append": "",
+                    "maxlength": ""
+                },
+                {
+                    "key": "field_6072aa035cb1c",
+                    "label": "Total",
+                    "name": "total",
+                    "type": "text",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "16.666",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "รวม",
+                    "placeholder": "",
+                    "prepend": "",
+                    "append": "",
+                    "maxlength": ""
+                },
+                {
+                    "key": "field_6072ac2bf2dee",
+                    "label": "Shipping",
+                    "name": "shipping",
+                    "type": "text",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "16.666",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "ค่าส่ง",
+                    "placeholder": "",
+                    "prepend": "",
+                    "append": "",
+                    "maxlength": ""
+                },
+                {
+                    "key": "field_610a5cd3a3715",
+                    "label": "Free Shipping",
+                    "name": "free_shipping",
+                    "type": "text",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "16.666",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "Free!",
+                    "placeholder": "",
+                    "prepend": "",
+                    "append": "",
+                    "maxlength": ""
+                },
+                {
+                    "key": "field_6072fe5d66687",
+                    "label": "Total",
+                    "name": "total",
+                    "type": "text",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "16.666",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "รวม",
+                    "placeholder": "",
+                    "prepend": "",
+                    "append": "",
+                    "maxlength": ""
+                }
+            ]
+        },
+        {
+            "key": "field_6072acc34f2cc",
+            "label": "Bank Account",
+            "name": "bank",
+            "type": "group",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_607531c5e10b1",
+                        "operator": "==",
+                        "value": "1"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "layout": "block",
+            "sub_fields": [
+                {
+                    "key": "field_6072acc34f2cd",
+                    "label": "Logo",
+                    "name": "bank_logo",
+                    "type": "select",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "20",
+                        "class": "",
+                        "id": ""
+                    },
+                    "choices": {
+                        "baac": "BAAC ธ.ก.ส.",
+                        "bbl": "BBL ธนาคารกรุงเทพ",
+                        "citi": "CITI ซิตี้แบงก์",
+                        "ghb": "GHB ธนาคารอาคารสงเคราะห์",
+                        "gsb": "GSB ธนาคารออมสิน",
+                        "ibank": "IBANK ธนาคารอิสลาม",
+                        "icbc": "ICBC ธนาคารไอซีบีซี",
+                        "kbank": "KBANK ธนาคารกสิกรไทย",
+                        "kkp": "KKP ธนาคารเกียรตินาคิน",
+                        "krungsri": "KRUNGSRI ธนาคารกรุงศรีฯ",
+                        "ktb": "KTB ธนาคารกรุงไทย",
+                        "scb": "SCB ธนาคารไทยพาณิชย์",
+                        "tbank": "TBANK ธนาคารธนชาต",
+                        "tisco": "TISCO ธนาคารทิสโก้",
+                        "tmb": "TMB ธนาคารทหารไทย",
+                        "uob": "UOB ธนาคารยูโอบี",
+                        "promptpay": "PROMPTPAY พร้อมเพย์",
+                        "other": "Other"
+                    },
+                    "default_value": false,
+                    "allow_null": 1,
+                    "multiple": 0,
+                    "ui": 0,
+                    "return_format": "value",
+                    "ajax": 0,
+                    "placeholder": ""
+                },
+                {
+                    "key": "field_6072d30a65c93",
+                    "label": "Custom Logo",
+                    "name": "custom_logo",
+                    "type": "image",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": [
+                        [
+                            {
+                                "field": "field_6072acc34f2cd",
+                                "operator": "==",
+                                "value": "other"
+                            }
+                        ]
+                    ],
+                    "wrapper": {
+                        "width": "20",
+                        "class": "",
+                        "id": ""
+                    },
+                    "return_format": "id",
+                    "preview_size": "thumbnail",
+                    "library": "all",
+                    "min_width": "",
+                    "min_height": "",
+                    "min_size": "",
+                    "max_width": "",
+                    "max_height": "",
+                    "max_size": "",
+                    "mime_types": ""
+                },
+                {
+                    "key": "field_6072acc34f2cf",
+                    "label": "Bank Name",
+                    "name": "bank_name",
+                    "type": "text",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "20",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "placeholder": "",
+                    "prepend": "",
+                    "append": "",
+                    "maxlength": ""
+                },
+                {
+                    "key": "field_6072acc34f2ce",
+                    "label": "Account No.",
+                    "name": "account_no",
+                    "type": "number",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "20",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "placeholder": "",
+                    "prepend": "",
+                    "append": "",
+                    "min": "",
+                    "max": "",
+                    "step": ""
+                },
+                {
+                    "key": "field_6072acc34f2d0",
+                    "label": "Account Name",
+                    "name": "account_name",
+                    "type": "text",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "20",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "placeholder": "",
+                    "prepend": "",
+                    "append": "",
+                    "maxlength": ""
+                }
+            ]
+        },
+        {
+            "key": "field_60bb9015d56db",
+            "label": "Enable Line Notify?",
+            "name": "enable_line_notify",
+            "type": "true_false",
+            "instructions": "Please read <a href=\"https:\/\/docs.seedwebs.com\/article\/85-line-notify-setting-for-sales-page\" target=\"_blank\"><b>Line Notify Setting for Sales Page<\/b><\/a>.",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_607530bea0aa9",
+                        "operator": "==",
+                        "value": "1"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "default_value": 0,
+            "ui": 1,
+            "ui_on_text": "Enable",
+            "ui_off_text": "Disable"
+        },
+        {
+            "key": "field_60b7bad9b52e6",
+            "label": "Line Notify token",
+            "name": "line_notify_token",
+            "type": "text",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_60bb9015d56db",
+                        "operator": "==",
+                        "value": "1"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "placeholder": "",
+            "prepend": "",
+            "append": "",
+            "maxlength": ""
+        },
+        {
+            "key": "field_60bb9374c502d",
+            "label": "Fields",
+            "name": "fields",
+            "type": "text",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_60bb9015d56db",
+                        "operator": "==",
+                        "value": "1"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "textarea-1, radio-1, name-1, email-1, number-2, upload-1, textarea-2",
+            "placeholder": "",
+            "prepend": "",
+            "append": "",
+            "maxlength": ""
+        },
+        {
+            "key": "field_60bb93c6c502e",
+            "label": "Labels",
+            "name": "labels",
+            "type": "text",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_60bb9015d56db",
+                        "operator": "==",
+                        "value": "1"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "คำสั่งซื้อ, ช่องทางการชำระเงิน, ชื่อ, อีเมล, เบอร์โทร, สลิป, ที่อยู่",
+            "placeholder": "",
+            "prepend": "",
+            "append": "",
+            "maxlength": ""
+        },
+        {
+            "key": "field_6049ba3d2b149",
+            "label": "Design",
+            "name": "",
+            "type": "tab",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "placement": "top",
+            "endpoint": 0
+        },
+        {
+            "key": "field_60496c6244dc7",
+            "label": "Show Header?",
+            "name": "show_header",
+            "type": "true_false",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "25",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "default_value": 0,
+            "ui": 1,
+            "ui_on_text": "Show",
+            "ui_off_text": "Hide"
+        },
+        {
+            "key": "field_60496c7d44dc8",
+            "label": "Show Footer?",
+            "name": "show_footer",
+            "type": "true_false",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "25",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "default_value": 0,
+            "ui": 1,
+            "ui_on_text": "Show",
+            "ui_off_text": "Hide"
+        },
+        {
+            "key": "field_60496c9244dc9",
+            "label": "Background Color",
+            "name": "background_color",
+            "type": "color_picker",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "25",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "#f0f0f1"
+        },
+        {
+            "key": "field_606d65cddf506",
+            "label": "Accent Color",
+            "name": "accent_color",
+            "type": "color_picker",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "25",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "#ef6354"
+        },
+        {
+            "key": "field_604985485f304",
+            "label": "Cover Image (Mobile)",
+            "name": "cover_m",
+            "type": "image",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "return_format": "id",
+            "preview_size": "thumbnail",
+            "library": "all",
+            "min_width": "",
+            "min_height": "",
+            "min_size": "",
+            "max_width": "",
+            "max_height": "",
+            "max_size": "",
+            "mime_types": ""
+        },
+        {
+            "key": "field_604988abd8235",
+            "label": "Cover Image (Table & Desktop)",
+            "name": "cover_d",
+            "type": "image",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "-border",
+                "id": ""
+            },
+            "return_format": "id",
+            "preview_size": "medium",
+            "library": "all",
+            "min_width": "",
+            "min_height": "",
+            "min_size": "",
+            "max_width": "",
+            "max_height": "",
+            "max_size": "",
+            "mime_types": ""
+        },
+        {
+            "key": "field_604985655f305",
+            "label": "Logo",
+            "name": "logo",
+            "type": "image",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "25",
+                "class": "",
+                "id": ""
+            },
+            "return_format": "id",
+            "preview_size": "medium",
+            "library": "all",
+            "min_width": "",
+            "min_height": "",
+            "min_size": "",
+            "max_width": "",
+            "max_height": "",
+            "max_size": "",
+            "mime_types": ""
+        },
+        {
+            "key": "field_604985945f306",
+            "label": "Rounded Logo?",
+            "name": "rounded_logo",
+            "type": "number",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "25",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 100,
+            "placeholder": "",
+            "prepend": "Border Radius",
+            "append": "px",
+            "min": "",
+            "max": "",
+            "step": ""
+        },
+        {
+            "key": "field_610ce69171dde",
+            "label": "Buy Now Button",
+            "name": "buy_now_button",
+            "type": "true_false",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "25",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "default_value": 0,
+            "ui": 1,
+            "ui_on_text": "Show",
+            "ui_off_text": "Hide"
+        },
+        {
+            "key": "field_610ce6b971ddf",
+            "label": "Buy Now Text",
+            "name": "buy_now_text",
+            "type": "text",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_610ce69171dde",
+                        "operator": "==",
+                        "value": "1"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "25",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "สั่งซื้อ!",
+            "placeholder": "",
+            "prepend": "",
+            "append": "",
+            "maxlength": ""
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "page_template",
+                "operator": "==",
+                "value": "page-templates\/salepage.php"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": "",
+    "active": true,
+    "description": "",
+    "modified": 1631020937
+}
