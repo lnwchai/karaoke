@@ -1445,6 +1445,8 @@ td.payment{
   .brand-head {
     text-align: center;
     margin-top: 30px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
     h2 {
       text-transform: uppercase;
       color: #fff;
