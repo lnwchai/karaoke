@@ -132,6 +132,7 @@ function get_rooms_by_branch(){
                         echo number_format_i18n( $price ).' '; 
                         echo __('Baht/Night', 'karaoke'); 
                     echo '</p>';
+                    echo karaoke_get_room_promo_image( get_the_ID(), $date );
                 echo '</div>';
             }
         }
@@ -930,6 +931,7 @@ function get_room_highlight(){
             ?> 
             <?php echo __('Baht/Night', 'karaoke'); ?>
         </p>
+        <?php echo karaoke_get_room_promo_image( $room_id, $date ); ?>
     </div>
     <?php
     exit();
@@ -1270,6 +1272,47 @@ function get_people_number(){
 add_action('wp_ajax_nopriv_get_people_number', 'get_people_number');
 add_action('wp_ajax_get_people_number', 'get_people_number');
 
+function karaoke_get_room_promo_image( $room_id, $date ){
+    $timestamp = strtotime($date);
+    if( !$timestamp ){
+        return '';
+    }
+
+    $field_name = in_array(date('D', $timestamp), array('Fri', 'Sat'), true) ? 'image_pro_fri_sat' : 'image_pro_sun_thu';
+    $image = get_field($field_name, $room_id);
+
+    if( empty($image) ){
+        return '';
+    }
+
+    $class = 'room-promo-image';
+    $wrapper_style = 'margin-top:8px;';
+    $image_attr = array(
+        'style' => 'display:block;max-width:100%;height:auto;margin:0 auto;border-radius:5px;',
+    );
+
+    if( is_numeric($image) ){
+        return '<div class="'.$class.'" style="'.$wrapper_style.'">'.wp_get_attachment_image($image, 'full', false, $image_attr).'</div>';
+    }
+
+    if( is_array($image) ){
+        if( !empty($image['ID']) ){
+            return '<div class="'.$class.'" style="'.$wrapper_style.'">'.wp_get_attachment_image($image['ID'], 'full', false, $image_attr).'</div>';
+        }
+
+        if( !empty($image['url']) ){
+            $alt = !empty($image['alt']) ? $image['alt'] : '';
+            return '<div class="'.$class.'" style="'.$wrapper_style.'"><img src="'.esc_url($image['url']).'" alt="'.esc_attr($alt).'" style="'.$image_attr['style'].'"></div>';
+        }
+    }
+
+    if( is_string($image) ){
+        return '<div class="'.$class.'" style="'.$wrapper_style.'"><img src="'.esc_url($image).'" alt="" style="'.$image_attr['style'].'"></div>';
+    }
+
+    return '';
+}
+
 function custom_display_price( $room_id, $date ){
     $day = date( 'D' , strtotime($date));
     if( $day == 'Fri' || $day == 'Sat' ){
@@ -1336,5 +1379,4 @@ add_action('wp_ajax_nopriv_custom_upload_slip', 'custom_upload_slip');
 add_action('wp_ajax_custom_upload_slip', 'custom_upload_slip');
 
 define('PLANT_DISABLE_ACF', true);
-
 
