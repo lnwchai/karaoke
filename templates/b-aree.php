@@ -18,7 +18,7 @@ $branch = 'aree';
     <div class="booking-bg">
         <main id="main" class="site-main booking-main">
             
-            <div class="brand-head">
+            <div class="brand-head-tv">
                 <h2><?php echo $branch; ?> </h2>
                 <p> <?php echo date("j F Y"); ?></p>
             </div>

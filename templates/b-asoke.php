@@ -18,7 +18,7 @@ $branch = 'asoke';
     <div class="booking-bg">
         <main id="main" class="site-main booking-main">
             
-            <div class="brand-head">
+            <div class="brand-head-tv">
                 <h2><?php echo $branch; ?> </h2>
                 <p> <?php echo date("j F Y"); ?></p>
             </div>
@@ -30,7 +30,7 @@ $branch = 'asoke';
                         $args = array(
                         'post_type' => 'booking_logs',
                         'post_status' => 'publish',
-                        'posts_per_page' => 19,
+                        'posts_per_page' => 20,
                         'meta_key' => 'room_number',
                         'orderby' => 'meta_value_num',
                         'order' => 'ASC',

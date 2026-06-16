@@ -138,6 +138,7 @@
       }
   }
   .brand-head{
+
       img{
           margin-bottom: 16px;
       }
@@ -1442,11 +1443,11 @@ td.payment{
 .page-template-templates {
   background: #1a2f36;
 
-  .brand-head {
+  .brand-head-tv {
     text-align: center;
     margin-top: 30px;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
     h2 {
       text-transform: uppercase;
       color: #fff;
