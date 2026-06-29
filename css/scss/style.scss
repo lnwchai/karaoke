@@ -1561,9 +1561,13 @@ td.payment{
 
 .sec-info {
   display: grid;
-    grid-template-columns: 1fr 2fr;
-    width: 280px;
-    margin: 0 auto;
+  grid-template-columns: 1fr 3fr;
+  width: 280px;
+  margin: 0 auto;
+}
+
+.sec-info.no-image {
+  display: block;
 }
 
 .radio-group {

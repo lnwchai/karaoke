@@ -116,6 +116,11 @@ function get_rooms_by_branch(){
             $the_query->the_post();
             $check_booking = check_room_has_booking($date, get_the_ID());
             if( $check_booking <= 0 ){
+                $day = date('D', strtotime($date));
+                $is_fri_sat = ($day == 'Fri' || $day == 'Sat');
+                $price_group = get_field( $is_fri_sat ? 'price_group_fri_sat' : 'price_group_sun_thu', get_the_ID() );
+                $per_pro = get_field( $is_fri_sat ? 'per_pro_fri_sat' : 'per_pro_sun_thu', get_the_ID() );
+
                 echo '<div class="radio-group">';
                     echo '<input type="radio" class="room-id" name="room_id" value="'.get_the_ID().'">';
                     echo '<div class="pic">';
@@ -125,13 +130,56 @@ function get_rooms_by_branch(){
                             <path d="M24.3332 5.104C13.7128 5.104 5.104 13.7128 5.104 24.3332C5.104 34.9536 13.7128 43.5623 24.3332 43.5623C34.9536 43.5623 43.5623 34.9536 43.5623 24.3332C43.5623 13.7128 34.9536 5.104 24.3332 5.104ZM22.1144 31.729L13.979 23.5936L15.4582 21.3748L22.1144 25.8123L32.4353 16.9373L34.6873 19.1561L22.1144 31.729Z" fill="white"/>
                             </svg>
                         </div>';
+
+                        if( !empty($price_group) && !empty($price_group['price_pax']) ){
+                            echo '<p class="price-pax-badge" style="position: absolute; top: 10px; left: 10px; background: orange; color: #ff0000; font-size: 18px; font-weight: bold; line-height: 15px; padding: 10px 10px !important; border-radius: 50%; margin: 0; text-align: center;">'
+                                . esc_html($price_group['price_pax'])
+                                . '<span style="display: block; color: #000; font-size: 12px; font-weight: normal;">/pax.</span>'
+                                . '</p>';
+                        } elseif( !empty($per_pro) && $per_pro > 0 ){
+                            echo '<div style="position: absolute; top: 10px; left: 10px; background: #f5a623; border-radius: 50%; width: 50px; height: 50px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;">';
+                                echo '<span style="color: #333; font-size: 12px; font-weight: bold;">ลด</span>';
+                                echo '<span style="color: #e00; font-size: 18px; font-weight: bold; line-height: 1;">'.$per_pro.'%</span>';
+                            echo '</div>';
+                        }
+
                     echo '</div>';
                     echo '<h3>'.get_the_title().'</h3>';
-                    echo '<p style="color: #fff; font-size: 16px;">';
-                        $price = custom_display_price( get_the_ID(), $date );
-                        echo number_format_i18n( $price ).' '; 
-                        echo __('Baht/Night', 'karaoke'); 
-                    echo '</p>';
+    
+                   
+                    $day = date('D', strtotime($date));
+                    $is_fri_sat = ($day == 'Fri' || $day == 'Sat');
+                    $per_pro = get_field( $is_fri_sat ? 'per_pro_fri_sat' : 'per_pro_sun_thu', get_the_ID() );
+                    $original_price = $is_fri_sat ? get_field('deposit_fri_sat', get_the_ID()) : get_field('deposit_sun_thu', get_the_ID());
+                    
+                    if( !empty($price_group) && !empty($price_group['price_pax']) ){
+                        echo '<p style="color: #FFAA00; font-size: 18px; font-weight: bold; margin: 0;">';
+                            echo number_format_i18n($price_group['price_total']);
+                            echo '<span style="color: #fff; font-size: 16px; font-weight: normal;"> '
+                                . esc_html($price_group['text_price'])
+                                . '</span>';
+                        echo '</p>';
+                    } elseif( !empty($per_pro) && $per_pro > 0 ) {
+                        $discounted_price = custom_display_price( get_the_ID(), $date );
+                        echo '<p style="margin: 0;">';
+                            // ราคาเดิมขีดฆ่า
+                            echo '<span style="color: #aaa; font-size: 16px; text-decoration: line-through; margin-right: 8px;">'
+                                . number_format_i18n($original_price)
+                                . '</span>';
+                            // ราคาใหม่
+                            echo '<span style="color: #FFAA00; font-size: 18px; font-weight: bold;">'
+                                . number_format_i18n($discounted_price)
+                                . '</span>';
+                            echo '<span style="color: #fff; font-size: 16px;"> '.__('Baht/Night', 'karaoke').'</span>';
+                        echo '</p>';
+                    } else {
+                        echo '<p style="color: #fff; font-size: 16px;">';
+                            $price = custom_display_price( get_the_ID(), $date );
+                            echo number_format_i18n( $price ).' ';
+                            echo __('Baht/Night', 'karaoke');
+                        echo '</p>';
+                    }
+    
                     echo karaoke_get_room_promo_image( get_the_ID(), $date );
                 echo '</div>';
             }
@@ -214,6 +262,21 @@ function get_checkout_form(){
 }
 add_action('wp_ajax_nopriv_get_checkout_form', 'get_checkout_form');
 add_action('wp_ajax_get_checkout_form', 'get_checkout_form');
+function get_promo_log_text( $room, $date ){
+    $day = date('D', strtotime($date));
+    $is_fri_sat = ($day == 'Fri' || $day == 'Sat');
+    $per_pro = get_field( $is_fri_sat ? 'per_pro_fri_sat' : 'per_pro_sun_thu', $room );
+    $price_group = get_field( $is_fri_sat ? 'price_group_fri_sat' : 'price_group_sun_thu', $room );
+
+    if( !empty($price_group) && !empty($price_group['price_pax']) ){
+        return 'price_group: '.$price_group['price_pax'].' pax / '.$price_group['price_total'].' '.$price_group['text_price'];
+    } elseif( !empty($per_pro) && $per_pro > 0 ){
+        $original = custom_display_price( $room, $date, true );
+        $discounted = custom_display_price( $room, $date );
+        return 'discount: '.$per_pro.'% / original: '.$original.' / final: '.$discounted;
+    }
+    return 'no_promo';
+}
 
 function save_booking_logs(){
     $phone = isset($_POST['phone']) ? sanitize_text_field($_POST['phone']) : 'none';
@@ -254,6 +317,8 @@ function save_booking_logs(){
 
         $deposit = get_field('deposit', $room);
         update_field( 'deposit', $deposit, $postid );
+
+        update_field( 'promo_log', get_promo_log_text( $room, $date ), $postid );
 
         $content = custom_email_contents( $postid );
         $subj = get_the_title( $room ).'( '.get_field('room_code', $room).' )';
@@ -694,6 +759,8 @@ function save_admin_booking_logs(){
     $deposit = get_field('deposit', $room); 
     update_field( 'deposit', $deposit, $postid );
 
+    update_field( 'promo_log', get_promo_log_text( $room, $date ), $postid );
+
     echo $postid;
     $content = custom_email_contents( $postid );
     $subj = get_the_title( $room ).'( '.get_field('room_code', $room).' )';
@@ -739,6 +806,8 @@ function save_admin_booking_walkin_logs(){
 
     $deposit = get_field('deposit', $room); 
     update_field( 'deposit', $deposit, $postid );
+
+    update_field( 'promo_log', get_promo_log_text( $room, $date ), $postid );
 
     $content = custom_email_contents( $postid );
     $subj = get_the_title( $room ).'( '.get_field('room_code', $room).' )';
@@ -922,18 +991,58 @@ function get_room_highlight(){
         <?php echo get_the_post_thumbnail( $room_id, 'full' ); ?>
         <p class="not">* Room visuals for advertising</p>
     </div>
-    <div class="sec-info">
-    <?php echo karaoke_get_room_promo_image( $room_id, $date ); ?>
-    <div class="info">
-        <h3><?php echo get_the_title($room_id); ?></h3>
-        <p style="color: #fff; font-size: 16px;">
-            <?php
-            $price = custom_display_price( $room_id, $date );
-            echo number_format_i18n( $price ).' '; 
-            ?> 
-            <?php echo __('Baht/Night', 'karaoke'); ?>
-        </p>
+    <?php
+    $day = date('D', strtotime($date));
+    $is_fri_sat = ($day == 'Fri' || $day == 'Sat');
+    $price_group = get_field( $is_fri_sat ? 'price_group_fri_sat' : 'price_group_sun_thu', $room_id );
+    $per_pro = get_field( $is_fri_sat ? 'per_pro_fri_sat' : 'per_pro_sun_thu', $room_id );
+    ?>
+
+<div class="sec-info">
+    <div class="info-r">
+        <?php echo karaoke_get_room_promo_image( $room_id, $date ); ?>
+        <?php if( !empty($price_group) && !empty($price_group['price_pax']) ): ?>
+            <div class="price-badge" style="min-width: 70px; width: 70px; height: 70px; background: #f5a623; border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; flex-shrink: 0;">
+                <span style="color: #e03; font-size: 22px; font-weight: bold; line-height: 1;"><?php echo esc_html($price_group['price_pax']); ?></span>
+                <span style="color: #333; font-size: 12px; line-height: 1;">/pax.</span>
+            </div>
+        <?php elseif( !empty($per_pro) && $per_pro > 0 ): ?>
+            <div class="price-badge" style="min-width: 70px; width: 70px; height: 70px; background: #f5a623; border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; flex-shrink: 0;">
+                <span style="color: #333; font-size: 12px; font-weight: bold;">ลด</span>
+                <span style="color: #e00; font-size: 22px; font-weight: bold; line-height: 1;"><?php echo $per_pro; ?>%</span>
+            </div>
+        <?php endif; ?>
     </div>
+    <div class="info-l">
+        <div class="info">
+            <h3><?php echo get_the_title($room_id); ?></h3>
+            <?php if( !empty($price_group) && !empty($price_group['price_total']) ): ?>
+                <p style="font-size: 16px; margin: 0;">
+                    <span style="color: #d1ab77; font-size: 24px; font-weight: bold;"><?php echo number_format_i18n($price_group['price_total']); ?></span>
+                    <span style="color: #fff;"> <?php echo esc_html($price_group['text_price']); ?></span>
+                </p>
+            <?php elseif( !empty($per_pro) && $per_pro > 0 ): ?>
+                <?php
+                $original_price = $is_fri_sat ? get_field('deposit_fri_sat', $room_id) : get_field('deposit_sun_thu', $room_id);
+                $discounted_price = custom_display_price( $room_id, $date );
+                ?>
+                <p style="margin: 0;">
+                    <span style="color: #aaa; font-size: 16px; text-decoration: line-through; margin-right: 8px;"><?php echo number_format_i18n($original_price); ?></span>
+                    <span style="color: #FFAA00; font-size: 24px; font-weight: bold;"><?php echo number_format_i18n($discounted_price); ?></span>
+                    <span style="color: #fff; font-size: 16px;"> <?php echo __('Baht/Night', 'karaoke'); ?></span>
+                </p>
+            <?php else: ?>
+                <p style="color: #fff; font-size: 16px; margin: 0;">
+                    <?php
+                    $price = custom_display_price( $room_id, $date );
+                    echo number_format_i18n( $price ).' ';
+                    echo __('Baht/Night', 'karaoke');
+                    ?>
+                </p>
+            <?php endif; ?>
+        </div>
+    </div>
+</div>
     
     </div>
     <?php
@@ -1312,35 +1421,48 @@ function karaoke_get_room_promo_image( $room_id, $date ){
     return '';
 }
 
-function custom_display_price( $room_id, $date ){
+function custom_display_price( $room_id, $date, $return_original = false ){
     $day = date( 'D' , strtotime($date));
     if( $day == 'Fri' || $day == 'Sat' ){
         $rp = get_field('deposit_fri_sat', $room_id);
+        $per_pro = get_field('per_pro_fri_sat', $room_id);
     }else{
         $rp = get_field('deposit_sun_thu', $room_id);
+        $per_pro = get_field('per_pro_sun_thu', $room_id);
     }
 
+    // คืนราคาก่อนลด
+    if( $return_original ){
+        return $rp;
+    }
+
+    // ลด % จาก deposit ตรงๆ ก่อน
+    if( !empty($per_pro) && $per_pro > 0 ){
+        $rp = intval($rp) - ( intval($rp) * ( $per_pro / 100 ) );
+    }
+
+    // apply price_setting ทับ
     $price_exp = get_field('price_setting', $room_id);
     $data_checked = [];
     $price_array = [];
-    foreach ($price_exp as $data) {
-        $data_checked[] = $data['date'];
-        $price_array[$data['date']] = $data; 
+    if( $price_exp ){
+        foreach ($price_exp as $data) {
+            $data_checked[] = $data['date'];
+            $price_array[$data['date']] = $data; 
+        }
     }
 
     $date_exp = date( 'Y-m-d' , strtotime($date));
     if( in_array( $date_exp, $data_checked ) ){
         $data_exp = $price_array[$date_exp];
         if( $data_exp['min_max_switch'] == 'min' ){
-            $return = intval( $rp ) - intval( $data_exp['price'] );
+            $rp = intval($rp) - intval($data_exp['price']);
         }else{
-            $return = intval( $rp ) + intval( $data_exp['price'] );
+            $rp = intval($rp) + intval($data_exp['price']);
         }
-    }else{
-        $return = $rp;
     }
 
-    return $return;
+    return $rp;
 }
 
 function date_booking() {
