@@ -1557,3 +1557,18 @@ td.payment{
   }
   
 }
+
+
+.sec-info {
+  display: grid;
+    grid-template-columns: 1fr 2fr;
+    width: 280px;
+    margin: 0 auto;
+}
+
+.radio-group {
+  .room-promo-image {
+    width: 100px;
+    margin: 0 auto;
+ }
+}

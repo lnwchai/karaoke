@@ -922,6 +922,8 @@ function get_room_highlight(){
         <?php echo get_the_post_thumbnail( $room_id, 'full' ); ?>
         <p class="not">* Room visuals for advertising</p>
     </div>
+    <div class="sec-info">
+    <?php echo karaoke_get_room_promo_image( $room_id, $date ); ?>
     <div class="info">
         <h3><?php echo get_the_title($room_id); ?></h3>
         <p style="color: #fff; font-size: 16px;">
@@ -931,7 +933,8 @@ function get_room_highlight(){
             ?> 
             <?php echo __('Baht/Night', 'karaoke'); ?>
         </p>
-        <?php echo karaoke_get_room_promo_image( $room_id, $date ); ?>
+    </div>
+    
     </div>
     <?php
     exit();
@@ -1286,10 +1289,6 @@ function karaoke_get_room_promo_image( $room_id, $date ){
     }
 
     $class = 'room-promo-image';
-    $wrapper_style = 'margin-top:8px;';
-    $image_attr = array(
-        'style' => 'display:block;max-width:100%;height:auto;margin:0 auto;border-radius:5px;',
-    );
 
     if( is_numeric($image) ){
         return '<div class="'.$class.'" style="'.$wrapper_style.'">'.wp_get_attachment_image($image, 'full', false, $image_attr).'</div>';
