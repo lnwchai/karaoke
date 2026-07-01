@@ -1497,66 +1497,30 @@ function is_public_holiday( $date ){
     return false;
 }
 
-function is_in_promo_period( $date, $start_field, $end_field ){
-    $start = get_field($start_field, 'option');
-    $end   = get_field($end_field, 'option');
-
-    // ถ้าไม่ได้ตั้งช่วงวันไว้เลย ถือว่าใช้ได้ตลอด
-    if( empty($start) && empty($end) ){
-        return true;
-    }
-
-    $date_check = strtotime( date('Y-m-d', strtotime($date)) );
-
-    // parse ACF Date Picker format (อาจเป็น Ymd หรือ Y-m-d)
-    $parse = function($val){
-        if( preg_match('/^\d{8}$/', $val) ){
-            return strtotime( DateTime::createFromFormat('Ymd', $val)->format('Y-m-d') );
-        }
-        return strtotime($val);
-    };
-
-    $start_ts = !empty($start) ? $parse($start) : null;
-    $end_ts   = !empty($end)   ? $parse($end)   : null;
-
-    if( $start_ts && $date_check < $start_ts ) return false;
-    if( $end_ts   && $date_check > $end_ts   ) return false;
-
-    return true;
-}
-
 
 
 
 function get_room_per_pro( $room_id, $date ){
-    // วันหยุดนักขัตฤกษ์ ไม่มีส่วนลด
+  // เช็ควันหยุดนักขัตฤกษ์ก่อน ถ้าใช่ ไม่มีส่วนลดเลย
     if( is_public_holiday( $date ) ){
         return 0;
     }
 
-    // เช็คช่วงวันที่โปร per_pro
-    if( !is_in_promo_period( $date, 'per_pro_start_date', 'per_pro_end_date' ) ){
-        return 0;
-    }
+
 
     $day = date('D', strtotime($date));
     if( $day == 'Sat' ){
         return get_field('per_pro_fri_sat', $room_id);
     } elseif( $day == 'Fri' ){
-        return 0;
+        return 0; // วันศุกร์ไม่มีส่วนลด
     } else {
         return get_field('per_pro_sun_thu', $room_id);
     }
 }
 
 function get_room_price_group( $room_id, $date ){
-    // วันหยุดนักขัตฤกษ์ ไม่มีราคา/pax.
+    // วันหยุดนักขัตฤกษ์ไม่มีโปรราคาต่อคนเช่นกัน
     if( is_public_holiday( $date ) ){
-        return null;
-    }
-
-    // เช็คช่วงวันที่โปร price_group
-    if( !is_in_promo_period( $date, 'price_group_start_date', 'price_group_end_date' ) ){
         return null;
     }
 
