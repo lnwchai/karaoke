@@ -1498,32 +1498,68 @@ function is_public_holiday( $date ){
 }
 
 
+function is_in_promo_period( $date, $repeater_field, $start_sub, $end_sub ){
+    $rows = get_field($repeater_field, 'option');
 
+    if( empty($rows) ){
+        return true;
+    }
+
+    $parse = function($val){
+        if( empty($val) ) return null;
+        // ACF Date Picker format Ymd (20260701)
+        if( preg_match('/^\d{8}$/', $val) ){
+            return strtotime( DateTime::createFromFormat('Ymd', $val)->format('Y-m-d') );
+        }
+        // format dd/mm/yyyy (01/07/2026)
+        if( preg_match('/^\d{2}\/\d{2}\/\d{4}$/', $val) ){
+            return strtotime( DateTime::createFromFormat('d/m/Y', $val)->format('Y-m-d') );
+        }
+        return strtotime($val);
+    };
+
+    $date_check = strtotime( date('Y-m-d', strtotime($date)) );
+
+    foreach( $rows as $row ){
+        $start    = !empty($row[$start_sub]) ? $row[$start_sub] : null;
+        $end      = !empty($row[$end_sub])   ? $row[$end_sub]   : null;
+        $start_ts = $parse($start);
+        $end_ts   = $parse($end);
+
+        $in_range = true;
+        if( $start_ts && $date_check < $start_ts ) $in_range = false;
+        if( $end_ts   && $date_check > $end_ts   ) $in_range = false;
+
+        if( $in_range ) return true;
+    }
+
+    return false;
+}
 
 function get_room_per_pro( $room_id, $date ){
-  // เช็ควันหยุดนักขัตฤกษ์ก่อน ถ้าใช่ ไม่มีส่วนลดเลย
     if( is_public_holiday( $date ) ){
         return 0;
     }
-
-
-
+    if( !is_in_promo_period( $date, 'per_pro', 'per_pro_start_date', 'per_pro_end_date' ) ){
+        return 0;
+    }
     $day = date('D', strtotime($date));
     if( $day == 'Sat' ){
         return get_field('per_pro_fri_sat', $room_id);
     } elseif( $day == 'Fri' ){
-        return 0; // วันศุกร์ไม่มีส่วนลด
+        return 0;
     } else {
         return get_field('per_pro_sun_thu', $room_id);
     }
 }
 
 function get_room_price_group( $room_id, $date ){
-    // วันหยุดนักขัตฤกษ์ไม่มีโปรราคาต่อคนเช่นกัน
     if( is_public_holiday( $date ) ){
         return null;
     }
-
+    if( !is_in_promo_period( $date, 'price_group', 'price_group_start_date', 'price_group_end_date' ) ){
+        return null;
+    }
     $day = date('D', strtotime($date));
     $is_fri_sat = ($day == 'Fri' || $day == 'Sat');
     return get_field( $is_fri_sat ? 'price_group_fri_sat' : 'price_group_sun_thu', $room_id );
