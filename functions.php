@@ -1536,13 +1536,24 @@ function is_in_promo_period( $date, $repeater_field, $start_sub, $end_sub ){
     return false;
 }
 
+function has_price_setting( $room_id, $date ){
+    $price_exp = get_field('price_setting', $room_id);
+    if( empty($price_exp) ) return false;
+
+    $date_exp = date('Y-m-d', strtotime($date));
+    foreach( $price_exp as $data ){
+        if( $data['date'] == $date_exp ){
+            return true;
+        }
+    }
+    return false;
+}
+
 function get_room_per_pro( $room_id, $date ){
-    if( is_public_holiday( $date ) ){
-        return 0;
-    }
-    if( !is_in_promo_period( $date, 'per_pro', 'per_pro_start_date', 'per_pro_end_date' ) ){
-        return 0;
-    }
+    if( has_price_setting( $room_id, $date ) ) return 0;
+    if( is_public_holiday( $date ) ) return 0;
+    if( !is_in_promo_period( $date, 'per_pro', 'per_pro_start_date', 'per_pro_end_date' ) ) return 0;
+
     $day = date('D', strtotime($date));
     if( $day == 'Sat' ){
         return get_field('per_pro_fri_sat', $room_id);
@@ -1554,17 +1565,14 @@ function get_room_per_pro( $room_id, $date ){
 }
 
 function get_room_price_group( $room_id, $date ){
-    if( is_public_holiday( $date ) ){
-        return null;
-    }
-    if( !is_in_promo_period( $date, 'price_group', 'price_group_start_date', 'price_group_end_date' ) ){
-        return null;
-    }
+    if( has_price_setting( $room_id, $date ) ) return null;
+    if( is_public_holiday( $date ) ) return null;
+    if( !is_in_promo_period( $date, 'price_group', 'price_group_start_date', 'price_group_end_date' ) ) return null;
+
     $day = date('D', strtotime($date));
     $is_fri_sat = ($day == 'Fri' || $day == 'Sat');
     return get_field( $is_fri_sat ? 'price_group_fri_sat' : 'price_group_sun_thu', $room_id );
 }
-
 
 function date_booking() {
     $start = get_field('start_date', 'options');
