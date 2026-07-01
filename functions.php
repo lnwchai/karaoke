@@ -21,6 +21,8 @@ function get_all_branch(){
     ?>
     <form action="" method="post">
         <h3>Select location</h3>
+        <input type="hidden" name="date" value="<?php echo esc_attr($date); ?>">
+        <input type="hidden" name="num" value="<?php echo esc_attr($people); ?>">
         <div class="input-rows s-grid -d3">
             <?php
             $args = array(
@@ -117,9 +119,12 @@ function get_rooms_by_branch(){
             $check_booking = check_room_has_booking($date, get_the_ID());
             if( $check_booking <= 0 ){
                 $day = date('D', strtotime($date));
+
+                
+
                 $is_fri_sat = ($day == 'Fri' || $day == 'Sat');
-                $price_group = get_field( $is_fri_sat ? 'price_group_fri_sat' : 'price_group_sun_thu', get_the_ID() );
-                $per_pro = get_field( $is_fri_sat ? 'per_pro_fri_sat' : 'per_pro_sun_thu', get_the_ID() );
+                $price_group = get_room_price_group( get_the_ID(), $date );
+                $per_pro = get_room_per_pro( get_the_ID(), $date );
 
                 echo '<div class="radio-group">';
                     echo '<input type="radio" class="room-id" name="room_id" value="'.get_the_ID().'">';
@@ -149,7 +154,7 @@ function get_rooms_by_branch(){
                    
                     $day = date('D', strtotime($date));
                     $is_fri_sat = ($day == 'Fri' || $day == 'Sat');
-                    $per_pro = get_field( $is_fri_sat ? 'per_pro_fri_sat' : 'per_pro_sun_thu', get_the_ID() );
+                    $per_pro = get_room_per_pro( get_the_ID(), $date );
                     $original_price = $is_fri_sat ? get_field('deposit_fri_sat', get_the_ID()) : get_field('deposit_sun_thu', get_the_ID());
                     
                     if( !empty($price_group) && !empty($price_group['price_pax']) ){
@@ -182,6 +187,7 @@ function get_rooms_by_branch(){
     
                     echo karaoke_get_room_promo_image( get_the_ID(), $date );
                 echo '</div>';
+                
             }
         }
         wp_reset_postdata();
@@ -262,11 +268,12 @@ function get_checkout_form(){
 }
 add_action('wp_ajax_nopriv_get_checkout_form', 'get_checkout_form');
 add_action('wp_ajax_get_checkout_form', 'get_checkout_form');
+
 function get_promo_log_text( $room, $date ){
     $day = date('D', strtotime($date));
     $is_fri_sat = ($day == 'Fri' || $day == 'Sat');
-    $per_pro = get_field( $is_fri_sat ? 'per_pro_fri_sat' : 'per_pro_sun_thu', $room );
-    $price_group = get_field( $is_fri_sat ? 'price_group_fri_sat' : 'price_group_sun_thu', $room );
+    $per_pro = get_room_per_pro( $room, $date );
+    $price_group = get_room_price_group( $room, $date );
 
     if( !empty($price_group) && !empty($price_group['price_pax']) ){
         return 'price_group: '.$price_group['price_pax'].' pax / '.$price_group['price_total'].' '.$price_group['text_price'];
@@ -986,18 +993,17 @@ add_action('wp_ajax_get_room_bookind_log_admin', 'get_room_bookind_log_admin');
 function get_room_highlight(){
     $room_id = isset($_POST['room']) ? sanitize_text_field($_POST['room']) : '';
     $date = isset($_POST['date']) ? sanitize_text_field($_POST['date']) : 'none';
+    $per_pro = get_room_per_pro( $room_id, $date );
     ?>
-    <div class="pic">
+   <div class="pic">
         <?php echo get_the_post_thumbnail( $room_id, 'full' ); ?>
         <p class="not">* Room visuals for advertising</p>
     </div>
     <?php
     $day = date('D', strtotime($date));
     $is_fri_sat = ($day == 'Fri' || $day == 'Sat');
-    $price_group = get_field( $is_fri_sat ? 'price_group_fri_sat' : 'price_group_sun_thu', $room_id );
-    $per_pro = get_field( $is_fri_sat ? 'per_pro_fri_sat' : 'per_pro_sun_thu', $room_id );
+    $price_group = get_room_price_group( $room_id, $date );
     ?>
-
 <div class="sec-info">
     <div class="info-r">
         <?php echo karaoke_get_room_promo_image( $room_id, $date ); ?>
@@ -1143,7 +1149,7 @@ function custom_email_contents( $logid ){
 function get_people_number(){
     $branch = isset($_POST['location']) ? sanitize_text_field($_POST['location']) : 'none';
     $date = isset($_POST['date']) ? sanitize_text_field($_POST['date']) : 'none';
-    ?>
+    ?>                           
     
     <?php
     $args = array(
@@ -1425,11 +1431,11 @@ function custom_display_price( $room_id, $date, $return_original = false ){
     $day = date( 'D' , strtotime($date));
     if( $day == 'Fri' || $day == 'Sat' ){
         $rp = get_field('deposit_fri_sat', $room_id);
-        $per_pro = get_field('per_pro_fri_sat', $room_id);
     }else{
         $rp = get_field('deposit_sun_thu', $room_id);
-        $per_pro = get_field('per_pro_sun_thu', $room_id);
     }
+
+    $per_pro = get_room_per_pro( $room_id, $date );
 
     // คืนราคาก่อนลด
     if( $return_original ){
@@ -1464,6 +1470,65 @@ function custom_display_price( $room_id, $date, $return_original = false ){
 
     return $rp;
 }
+
+function is_public_holiday( $date ){
+    $holidays = get_field('public_holidays', 'option');
+    if( empty($holidays) ){
+        return false;
+    }
+
+    $date_check = date('Y-m-d', strtotime($date));
+
+    foreach( $holidays as $row ){
+        $raw = $row['holiday_date'];
+
+        // ACF Date Picker เก็บ format Ymd เป็นค่าเริ่มต้น
+        if( preg_match('/^\d{8}$/', $raw) ){
+            $holiday_date = DateTime::createFromFormat('Ymd', $raw)->format('Y-m-d');
+        } else {
+            $holiday_date = date('Y-m-d', strtotime($raw));
+        }
+
+        if( $holiday_date == $date_check ){
+            return true;
+        }
+    }
+
+    return false;
+}
+
+
+
+
+function get_room_per_pro( $room_id, $date ){
+  // เช็ควันหยุดนักขัตฤกษ์ก่อน ถ้าใช่ ไม่มีส่วนลดเลย
+    if( is_public_holiday( $date ) ){
+        return 0;
+    }
+
+
+
+    $day = date('D', strtotime($date));
+    if( $day == 'Sat' ){
+        return get_field('per_pro_fri_sat', $room_id);
+    } elseif( $day == 'Fri' ){
+        return 0; // วันศุกร์ไม่มีส่วนลด
+    } else {
+        return get_field('per_pro_sun_thu', $room_id);
+    }
+}
+
+function get_room_price_group( $room_id, $date ){
+    // วันหยุดนักขัตฤกษ์ไม่มีโปรราคาต่อคนเช่นกัน
+    if( is_public_holiday( $date ) ){
+        return null;
+    }
+
+    $day = date('D', strtotime($date));
+    $is_fri_sat = ($day == 'Fri' || $day == 'Sat');
+    return get_field( $is_fri_sat ? 'price_group_fri_sat' : 'price_group_sun_thu', $room_id );
+}
+
 
 function date_booking() {
     $start = get_field('start_date', 'options');

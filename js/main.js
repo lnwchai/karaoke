@@ -21,6 +21,9 @@ jQuery(document).ready(function ($) {
         $('.sec-address').fadeIn();
     }
 
+    $(document).on('change', '.datepicker', function () {
+        localStorage.removeItem('localData');
+    });
     /*
     $('.room-branch').on('change', function(e){
         $(this).parents('.select-location').hide();
@@ -90,6 +93,7 @@ jQuery(document).ready(function ($) {
                 setDataLocal();
             }
         } else if ($(this).data('check') == 'location') {
+            localStorage.removeItem('localData');
             var checkLog = [];
             var branchId;
             $('.room-branch').each(function () {
