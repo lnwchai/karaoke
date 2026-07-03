@@ -1562,7 +1562,7 @@ td.payment{
 .sec-info {
   display: grid;
   grid-template-columns: 1fr 3fr;
-  width: 280px;
+  width: 310px;
   margin: 0 auto;
 }
 
@@ -1576,3 +1576,87 @@ td.payment{
     margin: 0 auto;
  }
 }
+
+.text-per {
+  position: absolute;
+  top: 0;
+  left: 10px;
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  align-items: center;
+  span {
+    color: #fff !important;
+    -webkit-text-stroke: 2px #3b64f6;
+    paint-order: stroke fill;
+    text-shadow: 0 0 1px #000;
+  }
+  strong {
+    color: #fff;
+    font-size: 20px;
+    -webkit-text-stroke: 2px #3b64f6;
+    paint-order: stroke fill;
+    text-shadow: 0 0 1px #000;
+}
+  b {
+    color: #fff !important;
+    font-size: 10px
+  }
+  
+}
+
+
+@import url('https://fonts.googleapis.com/css2?family=Kanit:wght@200;300;400;500;600;700&display=swap');
+.text-per {
+  position: absolute;
+  top: 0;
+  left: 10px;
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  align-items: normal;
+  font-family: 'Kanit', sans-serif;
+  span {
+    color: #fff !important;
+    -webkit-text-stroke: 3px #00258E;
+    paint-order: stroke fill;
+    text-shadow: 0 0 1px #21379A;
+  }
+  strong {
+    color: #fff;
+    font-size: 24px;
+    -webkit-text-stroke: 4px #00258E;
+    paint-order: stroke fill;
+    text-shadow: 0 0 1px #21379A;
+}
+  b {
+    color: #fff !important;
+    font-size: 10px
+  }
+  
+}
+.text-per-check{
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  align-items: normal;
+  font-family: 'Kanit', sans-serif;
+  span {
+    color: #fff !important;
+    -webkit-text-stroke: 3px #00258E;
+    paint-order: stroke fill;
+    text-shadow: 0 0 1px #21379A;
+    font-size: 24px;
+  }
+  strong {
+    color: #fff;
+    font-size: 44px;
+    -webkit-text-stroke: 4px #00258E;
+    paint-order: stroke fill;
+    text-shadow: 0 0 1px #21379A;
+}
+  b {
+    color: #fff !important;
+    font-size: 10px
+  }
+  
+}
+
+

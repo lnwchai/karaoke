@@ -142,10 +142,10 @@ function get_rooms_by_branch(){
                                 . '<span style="display: block; color: #000; font-size: 12px; font-weight: normal;">/pax.</span>'
                                 . '</p>';
                         } elseif( !empty($per_pro) && $per_pro > 0 ){
-                            echo '<div style="position: absolute; top: 10px; left: 10px; background: #f5a623; border-radius: 50%; width: 50px; height: 50px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;">';
-                                echo '<span style="color: #333; font-size: 12px; font-weight: bold;">ลด</span>';
-                                echo '<span style="color: #e00; font-size: 18px; font-weight: bold; line-height: 1;">'.$per_pro.'%</span>';
-                            echo '</div>';
+                            echo '<div class="text-per">';
+                            echo '<span>ลด</span>';
+                            echo '<strong>'.$per_pro.'<b>%</b></strong>';
+                        echo '</div>';
                         }
 
                     echo '</div>';
@@ -1013,9 +1013,9 @@ function get_room_highlight(){
                 <span style="color: #333; font-size: 12px; line-height: 1;">/pax.</span>
             </div>
         <?php elseif( !empty($per_pro) && $per_pro > 0 ): ?>
-            <div class="price-badge" style="min-width: 70px; width: 70px; height: 70px; background: #f5a623; border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; flex-shrink: 0;">
-                <span style="color: #333; font-size: 12px; font-weight: bold;">ลด</span>
-                <span style="color: #e00; font-size: 22px; font-weight: bold; line-height: 1;"><?php echo $per_pro; ?>%</span>
+            <div class="text-per-check">
+                <span>ลด</span>
+                <strong><?php echo $per_pro; ?><b>%</b></strong>
             </div>
         <?php endif; ?>
     </div>
@@ -1536,13 +1536,30 @@ function is_in_promo_period( $date, $repeater_field, $start_sub, $end_sub ){
     return false;
 }
 
+function has_price_setting( $room_id, $date ){
+    $price_exp = get_field('price_setting', $room_id);
+    if( empty($price_exp) ) return false;
+
+    $date_exp = date('Y-m-d', strtotime($date));
+    foreach( $price_exp as $data ){
+        $setting_date = date('Y-m-d', strtotime($data['date']));
+        if( $setting_date == $date_exp ){
+            return true;
+        }
+    }
+    return false;
+}
+
 function get_room_per_pro( $room_id, $date ){
-    if( is_public_holiday( $date ) ){
+    if( has_price_setting( $room_id, $date ) ){
         return 0;
     }
-    if( !is_in_promo_period( $date, 'per_pro', 'per_pro_start_date', 'per_pro_end_date' ) ){
+    if( is_public_holiday( $date ) ){ 
         return 0;
     }
+    $promo = is_in_promo_period( $date, 'per_pro', 'per_pro_start_date', 'per_pro_end_date' );
+    if( !$promo ) return 0;
+
     $day = date('D', strtotime($date));
     if( $day == 'Sat' ){
         return get_field('per_pro_fri_sat', $room_id);
@@ -1552,6 +1569,7 @@ function get_room_per_pro( $room_id, $date ){
         return get_field('per_pro_sun_thu', $room_id);
     }
 }
+
 
 function get_room_price_group( $room_id, $date ){
     if( is_public_holiday( $date ) ){
@@ -1564,6 +1582,8 @@ function get_room_price_group( $room_id, $date ){
     $is_fri_sat = ($day == 'Fri' || $day == 'Sat');
     return get_field( $is_fri_sat ? 'price_group_fri_sat' : 'price_group_sun_thu', $room_id );
 }
+
+
 
 
 function date_booking() {
