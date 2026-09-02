@@ -1561,13 +1561,23 @@ function get_room_per_pro( $room_id, $date ){
     if( !$promo ) return 0;
 
     $day = date('D', strtotime($date));
-    if( $day == 'Sat' ){
-        return get_field('per_pro_fri_sat', $room_id);
-    } elseif( $day == 'Fri' ){
-        return 0;
-    } else {
-        return get_field('per_pro_sun_thu', $room_id);
-    }
+
+    $day_field_map = [
+        'Sun' => 'per_pro_su',
+        'Mon' => 'per_pro_mo',
+        'Tue' => 'per_pro_tu',
+        'Wed' => 'per_pro_we',
+        'Thu' => 'per_pro_th',
+        'Fri' => 'per_pro_fr',
+        'Sat' => 'per_pro_st',
+    ];
+
+    $day_field = isset( $day_field_map[ $day ] ) ? $day_field_map[ $day ] : null;
+    if( !$day_field ) return 0;
+
+    $day_value = get_field( $day_field, $room_id );
+
+    return ( $day_value !== null && $day_value !== '' ) ? $day_value : 0;
 }
 
 
