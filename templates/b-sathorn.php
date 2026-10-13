@@ -18,7 +18,7 @@ $branch = 'sathorn';
     <div class="booking-bg">
         <main id="main" class="site-main booking-main">
             
-            <div class="brand-head">
+            <div class="brand-head-tv">
                 <h2><?php echo $branch; ?> </h2>
                 <p> <?php echo date("j F Y"); ?></p>
             </div>
@@ -62,14 +62,12 @@ $branch = 'sathorn';
                             echo '<div> <h3>Room</h3>';
                             echo '</div>';
 
-                           
-
                             echo '<div> <h3>Customer</h3>';
                             echo '</div>';
 
                         echo '</div>';
 
-                    
+                      
                             
                         echo '<div class="s-list">';
 
@@ -79,14 +77,13 @@ $branch = 'sathorn';
 
                                 echo '<div class="sub-list">';
 
-                                echo '<div class="room"><p>K'.get_field('room_number').'</p>';
+                                echo '<div class="room"> <p>'.get_field('room_number').'</p>';
                                 echo '</div>';
 
 
                                 echo '<div class="room"> <p>'.get_the_title($room).'</p>';
                                 echo '</div>';
-                                
-                              
+                        
 
                                 echo '<div class="name"> <p>คุณ '.get_field('fullname').'</p>';
                                 echo '</div>';
@@ -100,7 +97,7 @@ $branch = 'sathorn';
 
                         echo '</div>';
 
-                    
+                       
 
                     echo '</div>';
 
