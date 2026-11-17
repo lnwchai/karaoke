@@ -150,13 +150,23 @@ if( !isset( $_GET['logid'] ) && get_field('status', $pid) != 'paid' ){ wp_redire
                     </form>
                 </div> 
             <?php endif; */ ?>
-            <?php if( get_field('slip', $pid) ): ?>
-                <?php echo wp_get_attachment_image( get_field('slip', $pid), 'full'); ?>
-            <?php else: ?>
-            <div class="btn-payments">
-                <a href="https://booking.karaoke.co.th/upload-slip/?logid=<?php echo $pid ?>"><?php echo __('Upload Slip', 'karaoke'); ?></a>
-            </div>
-            <?php endif; ?>
+            
+          <?php
+                /*
+                if (get_field('slip', $pid)) {
+                    echo wp_get_attachment_image(get_field('slip', $pid), 'full');
+                } else {
+                    ?>
+                    <div class="btn-payments">
+                        <a href="https://booking.karaoke.co.th/upload-slip/?logid=<?php echo $pid ?>">
+                            <?php echo __('Upload Slip', 'karaoke'); ?>
+                        </a>
+                    </div>
+                    <?php
+                }
+                */
+                ?>
+            
             <br>
             <div class="line-contact" style="width: 180px; margin: 0 auto;">
                 <h3 style="font-size: 16px"><?php echo __('Add Line เพื่อสั่งอาหาร', 'karaoke'); ?></h3>
