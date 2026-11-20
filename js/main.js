@@ -15,8 +15,8 @@
 
 /* JQUERY */
 jQuery(document).ready(function ($) {
-    var bookinLogs = JSON.parse(localStorage.getItem('localData'));
-    if (bookinLogs != null && bookinLogs.room != '') {
+    var bookinLogs = getLocalBookingData();
+    if (bookinLogs && bookinLogs.room) {
         $('.get-allroom, .select-location, .select-people, .select-date, .select-room').hide();
         $('.sec-address').fadeIn();
     }
@@ -60,92 +60,90 @@ jQuery(document).ready(function ($) {
     });
 
     $(document).on('click', 'a.b-next', function (e) {
-        if ($(this).data('check') == 'date') {
-            var branch_log = $('.branch-lock').val()
-            var blogJson = JSON.parse(branch_log)
-            for (const [key, value] of Object.entries(blogJson)) {
-                console.log(key, value)
-            }
-            var dateChoose = $('.datepicker').val()
-            var blogChecked = blogJson[dateChoose] 
-            if( blogChecked != undefined ){
-                blogChecked.forEach(elm => {
-                  $('.b-'+elm).hide()  
-                })
-            }
-            
-            var checkLog = []
-            $('.ip-time').each(function () {
-                if ($(this).is(':checked')) {
-                    checkLog.push('true');
-                } else {
-                    checkLog.push('false');
-                }
-            });
+        var checkType = $(this).data('check');
 
-            if($('.datepicker').val() == ''){
+        if (checkType === 'date') {
+            e.preventDefault();
+
+            var dateChoose = $('.datepicker').val();
+            if (!dateChoose) {
                 alert('กรุณาเลือกวันที่');
-            }else if (!checkLog.includes('true')) {
-                alert('กรุณาเลือกเวลา');
-            } else {
-                $('.' + $(this).data('hide')).hide();
-                $('.' + $(this).data('show')).fadeIn();
-                setDataLocal();
+                return false;
             }
-        } else if ($(this).data('check') == 'location') {
-            localStorage.removeItem('localData');
-            var checkLog = [];
-            var branchId;
-            $('.room-branch').each(function () {
-                if ($(this).is(':checked')) {
-                    checkLog.push('true');
-                    branchId = $(this).val();
-                } else {
-                    checkLog.push('false');
-                }
-            });
+            if (!$('.ip-time:checked').length) {
+                alert('กรุณาเลือกเวลา');
+                return false;
+            }
 
-            if (!checkLog.includes('true')) {
+            var branchLockRaw = $('.branch-lock').val();
+            if (branchLockRaw) {
+                try {
+                    var branchLock = JSON.parse(branchLockRaw);
+                    (branchLock[dateChoose] || []).forEach(function (item) {
+                        $('.b-' + item).hide();
+                    });
+                } catch (error) {
+                    console.warn('Invalid branch-lock JSON:', error);
+                }
+            }
+
+            $('.' + $(this).data('hide')).hide();
+            $('.' + $(this).data('show')).fadeIn();
+            setDataLocal();
+            return false;
+
+        } else if (checkType === 'location') {
+            e.preventDefault();
+
+            var branchId = $('.room-branch:checked').val();
+            if (!branchId) {
                 alert('กรุณาเลือกสาขา');
-            } else {
-                var hide = $('.' + $(this).data('hide'));
-                var show = $('.' + $(this).data('show'));
-                var data = {
-                    action: "get_people_number",
+                return false;
+            }
+
+            var hide = $('.' + $(this).data('hide'));
+            var show = $('.' + $(this).data('show'));
+
+            updateLocalBookingData({ branch: branchId, room: '', num: '' });
+
+            $.ajax({
+                url: '/wp-admin/admin-ajax.php',
+                data: {
+                    action: 'get_people_number',
                     date: $('.datepicker').val(),
                     location: branchId
-                };
-
-                $.ajax({
-                    url: '/wp-admin/admin-ajax.php',
-                    data: data,
-                    type: 'post',
-                    success: function (result) {
-                        $('.select-people .input-rows').html(result);
-                        hide.hide();
-                        show.fadeIn();
-                        setDataLocal();
-                    },
-                });
-            }
-        } else if ($(this).data('check') == 'room') {
-            var checkLog = [];
-            $('.room-id').each(function () {
-                if ($(this).is(':checked')) {
-                    checkLog.push('true');
-                } else {
-                    checkLog.push('false');
+                },
+                type: 'POST',
+                success: function (result) {
+                    $('.select-people .input-rows').html(result);
+                    hide.hide();
+                    show.fadeIn();
+                    setDataLocal();
+                },
+                error: function () {
+                    alert('ไม่สามารถโหลดจำนวนผู้เข้าพักได้ กรุณาลองใหม่');
                 }
             });
+            return false;
 
-            if (!checkLog.includes('true')) {
+        } else if (checkType === 'room') {
+            e.preventDefault();
+
+            var selectedRoom = $('.room-id:checked').val();
+            if (!selectedRoom) {
                 alert('กรุณาเลือกห้อง');
-            } else {
-                $('.' + $(this).data('hide')).hide();
-                $('.' + $(this).data('show')).fadeIn();
-                setDataLocal();
+                return false;
             }
-        } else if ($(this).data('check') == 'policy') {
+
+            updateLocalBookingData({ room: selectedRoom });
+            $('.' + $(this).data('hide')).hide();
+            $('.' + $(this).data('show')).fadeIn();
+            setDataLocal();
+            return false;
+
+        } else if (checkType === 'policy') {
+            e.preventDefault();
+
             if ($('.term-checked').is(':checked')) {
                 $('.' + $(this).data('hide')).hide();
                 $('.' + $(this).data('show')).fadeIn();
@@ -153,8 +151,8 @@ jQuery(document).ready(function ($) {
             } else {
                 alert('กรุณากดยินยอม');
             }
+            return false;
         }
-        return false;
     });
 
     $(document).on('click', 'a.b-back', function (e) {
@@ -167,114 +165,196 @@ jQuery(document).ready(function ($) {
     $(document).on('submit', '.get-allroom', function (e) {
         e.preventDefault();
 
-        var data = $(this);
-        var checkLog = [];
-        var dataValue;
-        $('.people-num').each(function () {
-            if ($(this).is(':checked')) {
-                checkLog.push('true');
-                dataValue = $(this).val();
-            } else {
-                checkLog.push('false');
-            }
-        });
+        var form = $(this);
+        var dataValue = $('.people-num:checked').val();
 
-        if (!checkLog.includes('true')) {
+        if (!dataValue) {
             alert('กรุณาเลือกจำนวนคน');
-        } else {
-            if (dataValue == 'not-data') {
-                $('.full-booked-alert').fadeIn();
-            } else {
-                $.ajax({
-                    url: data.attr('action'),
-                    data: data.serialize(),
-                    type: data.attr('method'),
-                    success: function (res) {
-                        data.hide();
-                        $('.select-room').html(res);
-                        $('.select-room').fadeIn();
-                    }
-                });
-            }
+            return false;
         }
-    });
+        if (dataValue === 'not-data') {
+            $('.full-booked-alert').fadeIn();
+            return false;
+        }
 
-    $(document).on('submit', '.select-room form', function (e) {
-        e.preventDefault();
+        updateLocalBookingData({ num: dataValue, room: '' });
 
-        var checkLog = [];
-        $(this).find('.room-id').each(function () {
-            if ($(this).is(':checked')) {
-                bookinLogs.room = $(this).val();
-            } else {
-                checkLog.push('false');
+        $.ajax({
+            url: form.attr('action') || '/wp-admin/admin-ajax.php',
+            data: form.serialize(),
+            type: (form.attr('method') || 'POST').toUpperCase(),
+            beforeSend: function () {
+                $('.wait-loading').fadeIn();
+            },
+            success: function (res) {
+                var responseHtml = $.trim(String(res || ''));
+                var $response = $('<div>').html(responseHtml);
+                var hasAvailableRooms = $response.find('.room-id').length > 0;
+
+                if (!responseHtml || responseHtml === 'false' || !hasAvailableRooms) {
+                    alert('ไม่มีห้องว่างสำหรับจำนวนคนและวันที่ที่เลือก กรุณาเลือกใหม่');
+                    $('.select-room').hide().empty();
+                    form.show();
+                    return;
+                }
+
+                form.hide();
+                $('.select-room').html(responseHtml).fadeIn();
+            },
+            error: function () {
+                alert('ไม่สามารถโหลดรายการห้องได้ กรุณาลองใหม่');
+            },
+            complete: function () {
+                $('.wait-loading').fadeOut();
             }
         });
 
-        if (!checkLog.includes('true')) {
-            alert('กรุณาเลือกท้อง');
-        } else {
-            var data = {
-                action: "get_checkout_form",
-                date: bookinLogs.date,
-                num: bookinLogs.num,
-                room: bookinLogs.room,
-                branch: bookinLogs.branch,
-            };
-
-            $.ajax({
-                url: '/wp-admin/admin-ajax.php',
-                data: data,
-                type: 'post',
-                success: function (result) {
-                    $('.select-room').hide();
-                    $('.set-address').html(result);
-                    $('.set-address').fadeIn();
-                },
-            });
-        }
+        return false;
     });
 
-    $(document).on('click', '.b-next.-create', function (e) {
+
+$(document).on('submit', '.select-room form', function (e) {
         e.preventDefault();
 
-        if ($('.fullname').val() == '' || $('.phone').val() == '' || $('.email').val() == '') {
-            alert('กรุณาเลือกกรอกข้อมูลให้ครบถ้วน');
-        } else {
-            $(this).hide();
-
-            var logs = JSON.parse(localStorage.getItem('localData'));
-            var data = {
-                action: "save_booking_logs",
-                fullname: $('.fullname').val(),
-                phone: $('.phone').val(),
-                room: logs.room,
-                email: $('.email').val(),
-                date: logs.date,
-                time: logs.time
-            };
-
-            $.ajax({
-                url: '/wp-admin/admin-ajax.php',
-                data: data,
-                type: 'post',
-                beforeSend: function () {
-                    $('.wait-loading').fadeIn();
-                },
-                success: function (result) {
-                    var res = JSON.parse(result);
-                    if (res.status == 'error') {
-                        alert(res.data)
-                    } else {
-                        localStorage.removeItem('localData');
-                        window.location.href = '/booking/payment?logid=' + res.data;
-                    }
-                }
-            });
+        var selectedRoom = $(this).find('.room-id:checked').val();
+        if (!selectedRoom) {
+            alert('กรุณาเลือกห้อง');
+            return false;
         }
+
+        var bookingData = getLocalBookingData() || {};
+        if (!bookingData.date || !bookingData.branch || !bookingData.num) {
+            alert('ข้อมูลการจองไม่ครบ กรุณาเริ่มเลือกวัน สาขา และจำนวนคนใหม่');
+            localStorage.removeItem('localData');
+            window.location.reload();
+            return false;
+        }
+
+        updateLocalBookingData({ room: selectedRoom });
+
+        $.ajax({
+            url: '/wp-admin/admin-ajax.php',
+            data: {
+                action: 'get_checkout_form',
+                date: bookingData.date,
+                num: bookingData.num,
+                room: selectedRoom,
+                branch: bookingData.branch
+            },
+            type: 'POST',
+            beforeSend: function () {
+                $('.wait-loading').fadeIn();
+            },
+            success: function (result) {
+                if (!$.trim(String(result || ''))) {
+                    alert('ไม่สามารถโหลดแบบฟอร์มการจองได้ กรุณาลองใหม่');
+                    return;
+                }
+                $('.select-room').hide();
+                $('.set-address').html(result).fadeIn();
+            },
+            error: function () {
+                alert('เกิดข้อผิดพลาดในการโหลดข้อมูล กรุณาลองใหม่');
+            },
+            complete: function () {
+                $('.wait-loading').fadeOut();
+            }
+        });
+
+        return false;
     });
 
-    $('.full-booked-alert .close').on('click', function () {
+
+$(document).on('click', '.b-next.-create', function (e) {
+        e.preventDefault();
+
+        var button = $(this);
+        var fullname = $.trim($('.fullname').val() || '');
+        var phone = $.trim($('.phone').val() || '');
+        var email = $.trim($('.email').val() || '');
+        var bookingData = getLocalBookingData() || {};
+
+        if (!fullname || !phone || !email) {
+            alert('กรุณากรอกข้อมูลให้ครบถ้วน');
+            return false;
+        }
+        if (!bookingData.room || !bookingData.date) {
+            alert('ข้อมูลห้องหรือวันที่จองไม่ครบ กรุณาเลือกห้องใหม่');
+            return false;
+        }
+
+        var selectedTime = $('.set-address .time').val() || bookingData.time || '';
+        if (!selectedTime) {
+            alert('กรุณาเลือกเวลา');
+            return false;
+        }
+        if (button.data('submitting')) {
+            return false;
+        }
+
+        button.data('submitting', true).hide();
+
+        $.ajax({
+            url: '/wp-admin/admin-ajax.php',
+            data: {
+                action: 'save_booking_logs',
+                fullname: fullname,
+                phone: phone,
+                room: bookingData.room,
+                email: email,
+                date: bookingData.date,
+                time: selectedTime
+            },
+            type: 'POST',
+            dataType: 'json',
+            beforeSend: function () {
+                $('.wait-loading').fadeIn();
+            },
+            success: function (res) {
+                if (!res || typeof res !== 'object') {
+                    alert('ระบบตอบกลับไม่ถูกต้อง กรุณาลองใหม่');
+                    button.data('submitting', false).show();
+                    return;
+                }
+
+                if (res.status === 'error') {
+                    alert('ห้องที่คุณเลือกถูกจองไปก่อนแล้ว กรุณาเลือกห้องใหม่');
+                    updateLocalBookingData({ room: '' });
+                    $('.set-address').hide().empty();
+
+                    var roomForm = $('.get-allroom');
+                    if (roomForm.length) {
+                        roomForm.show().trigger('submit');
+                    } else {
+                        $('.select-room').hide().empty();
+                        button.data('submitting', false).show();
+                    }
+                    return;
+                }
+
+                if (res.status === 'success' && res.data) {
+                    localStorage.removeItem('localData');
+                    window.location.href = '/booking/payment?logid=' + encodeURIComponent(res.data);
+                    return;
+                }
+
+                alert('ไม่สามารถบันทึกการจองได้ กรุณาลองใหม่');
+                button.data('submitting', false).show();
+            },
+            error: function () {
+                alert('เกิดข้อผิดพลาดในการเชื่อมต่อ กรุณาลองใหม่');
+                button.data('submitting', false).show();
+            },
+            complete: function () {
+                $('.wait-loading').fadeOut();
+            }
+        });
+
+        return false;
+    });
+
+
+$('.full-booked-alert .close').on('click', function () {
         $('.full-booked-alert').fadeOut();
     });
 
@@ -443,31 +523,46 @@ jQuery(document).ready(function ($) {
     //     $('input[type="date"]').attr('max', maxDate);
     // });
 
-    // Set data to localStorage
-    function setDataLocal() {
-        var timtVal = '', roomId = '';
-        $('.ip-time').each(function () {
-            if ($(this).is(':checked')) {
-                timtVal = $(this).val();
-            }
-        });
-
-        $('.room-id').each(function () {
-            if ($(this).is(':checked')) {
-                roomId = $(this).val();
-            }
-        });
-
-        var localData = {
-            fullname: $('.fullname').val(),
-            phone: $('.phone').val(),
-            room: roomId,
-            email: $('.email').val(),
-            date: $('.datepicker').val(),
-            time: timtVal
+    // Local booking data helpers
+    function getLocalBookingData() {
+        try {
+            var stored = localStorage.getItem('localData');
+            return stored ? JSON.parse(stored) : {};
+        } catch (error) {
+            console.warn('Invalid local booking data:', error);
+            localStorage.removeItem('localData');
+            return {};
         }
+    }
 
-        localStorage.setItem("localData", JSON.stringify(localData));
+    function updateLocalBookingData(values) {
+        var current = getLocalBookingData() || {};
+        Object.keys(values || {}).forEach(function (key) {
+            current[key] = values[key];
+        });
+        localStorage.setItem('localData', JSON.stringify(current));
+        return current;
+    }
+
+    function setDataLocal() {
+        var current = getLocalBookingData() || {};
+        var selectedTime = $('.ip-time:checked').val();
+        var selectedRoom = $('.room-id:checked').val();
+        var selectedBranch = $('.room-branch:checked').val();
+        var selectedPeople = $('.people-num:checked').val();
+        var dateValue = $('.datepicker').val();
+
+        if (dateValue) current.date = dateValue;
+        if (selectedTime) current.time = selectedTime;
+        if (selectedRoom) current.room = selectedRoom;
+        if (selectedBranch) current.branch = selectedBranch;
+        if (selectedPeople && selectedPeople !== 'not-data') current.num = selectedPeople;
+
+        current.fullname = $('.fullname').val() || current.fullname || '';
+        current.phone = $('.phone').val() || current.phone || '';
+        current.email = $('.email').val() || current.email || '';
+
+        localStorage.setItem('localData', JSON.stringify(current));
     }
 
     // Admin booking
@@ -487,7 +582,7 @@ jQuery(document).ready(function ($) {
             }
         });
 
-        if (roomId == '' || $('.fullname').val() == '' || $('.phone').val() == '' || $('.email').val() == '') {
+        if (!roomId || !$('.fullname').val() || !$('.phone').val() || !$('.email').val()) {
             alert('กรุณาเลือกกรอกข้อมูลให้ครบถ้วน');
         } else {
             var data = {
@@ -527,7 +622,7 @@ jQuery(document).ready(function ($) {
             }
         });
 
-        if (roomId == '' || $('.fullname').val() == '' || $('.phone').val() == '' || $('.email').val() == '') {
+        if (!roomId || !$('.fullname').val() || !$('.phone').val() || !$('.email').val()) {
             alert('กรุณาเลือกกรอกข้อมูลให้ครบถ้วน');
         } else {
             var data = {
@@ -687,7 +782,7 @@ function kpaymentForm(el) {
                     window.location = '/payment-callback/?logid=' + pid;
                 }
             } else if (status == 'fail') {
-                alert(massage);
+                alert(result.message || 'Payment failed. Please try again.');
             } else {
                 console.log(result);
             }
@@ -714,4 +809,3 @@ setInterval(() => {
 
 
 
-// test
